@@ -7,8 +7,8 @@ on:
 
 jobs:
   update-version:
-    name: Auto Tag Minor Release
-    runs-on: solinas
+    name: Auto Update Minor Version
+    runs-on: ubuntu-latest
     permissions:
       contents: write
 

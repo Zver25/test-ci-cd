@@ -8,7 +8,7 @@ on:
 jobs:
   update-version:
     name: Auto Update Patch Version
-    runs-on: solinas
+    runs-on: ubuntu-latest
     permissions:
       contents: write
 
