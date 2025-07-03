@@ -1,0 +1,39 @@
+name: Update patch version
+
+on:
+  push:
+    branches:
+      - sprint-*
+
+jobs:
+  update-version:
+    name: Auto Update Patch Version
+    runs-on: solinas
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump minor version
+        run: |
+          npm version patch --no-git-tag-version
+          
+          VERSION=$(jq -r '.version' package.json)
+          echo "Version is $VERSION" >> $GITHUB_STEP_SUMMARY
+          
+          git add package.json
+          git commit --amend --no-edit
+
+      - name: Push changes
+        run: |
+          echo "Pushing changes to branch ${{ github.ref_name }}"
+          # git push origin HEAD:${{ github.ref_name }} --force
