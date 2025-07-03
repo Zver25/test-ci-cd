@@ -8,9 +8,8 @@ on:
 jobs:
   update-version:
     if: |
-        github.event.pull_request.commits > 0 &&
-        github.event.base.ref == 'main' &&
-        startsWith(github.event.head.ref, 'sprint-') &&
+        github.base_ref == 'main' &&
+        startsWith(github.head_ref, 'sprint-') &&
         github.event.pull_request.merged == true &&
         !contains(github.event.pull_request.labels.*.name, 'skip-version-update')
     name: Auto Update Minor Version
