@@ -2,8 +2,8 @@ name: Update patch version
 
 on:
   pull_request:
-    branches:
-      - sprint-*
+    branches: [sprint-*]
+    types: [closed]
 
 jobs:
   update-version:
