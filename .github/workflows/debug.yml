@@ -1,0 +1,21 @@
+name: Debug Workflow
+
+on:
+  pull_request:
+    branches:
+      - sprint-*
+
+jobs:
+  debug:
+    name: Debug PR Workflow
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Debug
+        run: |
+          echo "Event ${{ toJson(github.event) }}"
