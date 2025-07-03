@@ -11,6 +11,7 @@ jobs:
         github.event.pull_request.commits > 0 &&
         startsWith(github.event.base.ref, 'sprint-') &&
         startsWith(github.event.head.ref, 'feature-') &&
+        github.event.pull_request.merged == true
         !contains(github.event.pull_request.labels.*.name, 'skip-version-update')
     name: Auto Update Patch Version
     runs-on: ubuntu-latest
@@ -41,4 +42,4 @@ jobs:
       - name: Push changes
         run: |
           echo "Pushing changes to branch ${{ github.ref_name }}"
-          # git push origin HEAD:${{ github.ref_name }} --force
+          git push origin HEAD:${{ github.ref_name }} --force
