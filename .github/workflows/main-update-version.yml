@@ -2,8 +2,8 @@ name: Update minor version
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
+    types: [closed]
 
 jobs:
   update-version:
