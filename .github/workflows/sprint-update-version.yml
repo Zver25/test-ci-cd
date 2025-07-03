@@ -9,8 +9,8 @@ jobs:
   update-version:
     if: |
         github.event.pull_request.commits > 0 &&
-        startsWith(github.event.base.ref, 'sprint-') &&
-        startsWith(github.event.head.ref, 'feature-') &&
+        startsWith(github.base_ref, 'sprint-') &&
+        startsWith(github.head_ref, 'feature-') &&
         github.event.pull_request.merged == true &&
         !contains(github.event.pull_request.labels.*.name, 'skip-version-update')
     name: Auto Update Patch Version
