@@ -1,13 +1,18 @@
 name: Update patch version
 
 on:
-  push:
+  pull_request:
     branches:
       - sprint-*
 
 jobs:
   update-version:
-    if: ${ github.pull_request.commits > 0 }
+    if: ${
+      github.pull_request.commits > 0 && 
+      github.event.base.ref.startsWith('sprint-') &&
+      github.event.head.ref.startsWith('feature-') &&
+      github.event.pull_request.labels.*.name != 'skip-version-update'
+    }
     name: Auto Update Patch Version
     runs-on: ubuntu-latest
     permissions:
