@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "Base ref: ${{ github.event.base.ref }}"
-          echo "Head ref: ${{ github.event.head.ref }}"
+          echo "Base ref: ${{ github.base.ref }}"
+          echo "Head ref: ${{ github.head.ref }}"
           echo "isMerged: ${{ github.event.pull_request.merged }}"
           echo "Comits count: ${{ github.event.pull_request.commits }}"
