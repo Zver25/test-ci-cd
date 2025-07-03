@@ -11,7 +11,7 @@ jobs:
         github.event.pull_request.commits > 0 &&
         github.event.base.ref == 'main' &&
         startsWith(github.event.head.ref, 'sprint-') &&
-        github.event.pull_request.merged == true
+        github.event.pull_request.merged == true &&
         !contains(github.event.pull_request.labels.*.name, 'skip-version-update')
     name: Auto Update Minor Version
     runs-on: ubuntu-latest
