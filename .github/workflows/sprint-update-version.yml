@@ -8,27 +8,34 @@ on:
 jobs:
   update-version:
     if: |
-        startsWith(github.base_ref, 'sprint-') &&
-        startsWith(github.head_ref, 'feature-') &&
-        github.event.pull_request.merged == true &&
-        !contains(github.event.pull_request.labels.*.name, 'skip-version-update')
+      startsWith(github.base_ref, 'sprint-') &&
+      startsWith(github.head_ref, 'feature-') &&
+      github.event.pull_request.merged == true &&
+      !contains(github.event.pull_request.labels.*.name, 'skip-version-update')
     name: Auto Update Patch Version
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: Checkout
+      - name: Checkout base branch (sprint branch)
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.base.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Configure git user
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Bump minor version
+      - name: Get last commit info
+        run: |
+          echo "Last commit in base branch before version update:"
+          git log -1 --oneline
+
+      - name: Bump patch version
         run: |
           npm version patch --no-git-tag-version
           
@@ -38,7 +45,12 @@ jobs:
           git add package.json
           git commit --amend --no-edit
 
-      - name: Push changes
+      - name: Git log after update
         run: |
-          echo "Pushing changes to branch ${{ github.ref_name }}"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }} --force
+          echo "Commits in base branch after version update:"
+          git log -n 5 --oneline
+
+      - name: Push changes to base branch
+        run: |
+          echo "Pushing changes to base branch: ${{ github.event.pull_request.base.ref }}"
+          git push origin ${{ github.event.pull_request.base.ref }} --force-with-lease
