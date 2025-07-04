@@ -44,10 +44,9 @@ jobs:
           git fetch origin main
           git checkout main
 
-      - name: Rebase and merge source branch
+      - name: Fast-forward merge to main
         run: |
-          git rebase origin/${{ inputs.source_branch }}
-          echo "Source branch: ${{ inputs.source_branch }} rebased into main" >> $GITHUB_STEP_SUMMARY
+          git merge ${{ inputs.source_branch }} --ff-only
 
       - name: Push changes to main
         run: |
