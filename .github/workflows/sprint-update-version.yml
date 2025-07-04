@@ -33,7 +33,7 @@ jobs:
           npm version patch --no-git-tag-version
           
           VERSION=$(jq -r '.version' package.json)
-          echo "Version is $VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "Version updated to: $VERSION" >> $GITHUB_STEP_SUMMARY
           
           git add package.json
           git commit --amend --no-edit

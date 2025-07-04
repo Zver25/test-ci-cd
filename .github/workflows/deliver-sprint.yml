@@ -1,0 +1,54 @@
+name: Update minor version
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: 'Branch for merging'
+        required: true
+        type: string
+        default: 'sprint-'
+
+jobs:
+  update-version:
+    name: Manual Update Minor Version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump minor version
+        run: |
+          npm version minor --no-git-tag-version
+          
+          VERSION=$(jq -r '.version' package.json)
+          echo "Version updated to: $VERSION" >> $GITHUB_STEP_SUMMARY
+          
+          git add package.json
+          git commit -m "Set version to $VERSION"
+
+      - name: Fetch and checkout main branch
+        run: |
+          git fetch origin main
+          git checkout main
+
+      - name: Rebase and merge source branch
+        run: |
+          git rebase origin/${{ inputs.source_branch }}
+          echo "Source branch: ${{ inputs.source_branch }} rebased into main" >> $GITHUB_STEP_SUMMARY
+
+      - name: Push changes to main
+        run: |
+          git push origin main
