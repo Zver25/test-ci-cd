@@ -3,15 +3,14 @@ name: Deliver sprint
 on:
   workflow_dispatch:
     inputs:
-      source_branch:
-        description: 'Branch for merging'
+      sprint_number:
+        description: 'Sprint number'
         required: true
-        type: string
-        default: 'sprint-'
+        type: number
 
 jobs:
   deliver-sprint:
-    name: Deliver sprint scope
+    name: Deliver sprint-${{ inputs.sprint_number }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -21,8 +20,9 @@ jobs:
       - name: Checkout source branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_branch }}
+          ref: sprint-${{ inputs.sprint_number }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Configure git user
         run: |
@@ -33,20 +33,21 @@ jobs:
         run: |
           npm version minor --no-git-tag-version
           
+          echo "Sprint branch: sprint-${{ inputs.sprint_number }}" >> $GITHUB_STEP_SUMMARY
           VERSION=$(jq -r '.version' package.json)
           echo "Version updated to: $VERSION" >> $GITHUB_STEP_SUMMARY
           
           git add package.json
           git commit -m "Set version to $VERSION"
 
-      - name: Fetch and checkout main branch
+      - name: Switch to main branch
         run: |
           git fetch origin main
           git checkout main
 
       - name: Fast-forward merge to main
         run: |
-          git merge ${{ inputs.source_branch }} --ff-only
+          git merge sprint-${{ inputs.sprint_number }} --ff-only
 
       - name: Push changes to main
         run: |
