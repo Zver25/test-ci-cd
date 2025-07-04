@@ -30,11 +30,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Get last commit info
-        run: |
-          echo "Last commit in base branch before version update:"
-          git log -1 --oneline
-
       - name: Bump patch version
         run: |
           npm version patch --no-git-tag-version
@@ -44,11 +39,6 @@ jobs:
           
           git add package.json
           git commit --amend --no-edit
-
-      - name: Git log after update
-        run: |
-          echo "Commits in base branch after version update:"
-          git log -n 5 --oneline
 
       - name: Push changes to base branch
         run: |

@@ -1,3 +1,3 @@
 console.log('Hello World!');
 
-console.log('Feature 6.');
+console.log('Feature Finished');
