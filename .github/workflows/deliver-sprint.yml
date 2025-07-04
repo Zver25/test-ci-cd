@@ -1,4 +1,4 @@
-name: Update minor version
+name: Deliver sprint
 
 on:
   workflow_dispatch:
@@ -10,8 +10,8 @@ on:
         default: 'sprint-'
 
 jobs:
-  update-version:
-    name: Manual Update Minor Version
+  deliver-sprint:
+    name: Deliver sprint scope
     runs-on: ubuntu-latest
     permissions:
       contents: write
